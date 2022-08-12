@@ -13,7 +13,7 @@ function Content():JSX.Element {
         <button>hi</button>
         <Spacer></Spacer>
         <button onClick={()=>{
-            dm.show(<button>I'm a dialog</button>)
+            dm.show(<button onClick={()=>dm.hide()}>I'm a dialog</button>)
         }}>there</button>
     </HBox>
     </div>
