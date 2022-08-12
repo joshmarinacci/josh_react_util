@@ -1,7 +1,57 @@
 body {
-    --light-border: red;
-    --light-highlight-background: green;
+    --background-color: #f0f0f0;
+    --border-color: #444;
+    --text-color: #444;
+    --selected-background-color: #0f8ea4;
+    --selected-border-color: white;
+    --selected-text-color: white;
+
+    --toolbar-background-color: #ccc;
+
 }
+
+body {
+    color: var(--text-color);
+    background-color: var(--background-color);
+}
+button {
+    background-color: var(--background-color);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+.selected {
+    background-color: var(--selected-background-color);
+    border-color: var(--selected-border-color);
+    color: var(--selected-text-color);
+}
+
+.fill-page {
+    border: 0px solid red;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+.tabbed-pane {
+    border: 0px solid red;
+}
+
+.tab-titles {
+    background-color: var(--toolbar-background-color);
+    border: 1px solid var(--border-color);
+    border-bottom-width: 0;
+}
+.tab-title {
+    border: 1px solid var(--border-color);
+    margin: 0.25rem 0.25rem 0 0.25rem;
+    border-radius: 0.25rem;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom-width: 0;
+}
+.tab-content {
+    border: 1px solid var(--border-color);
+}
+
 .vbox {
     display: flex;
     flex-direction: column;
@@ -37,15 +87,15 @@ body {
     min-width: 20rem;
     max-width: 30rem;
     min-height: 10rem;
-    border: 1px solid var(--light-border);
-    background-color: var(--light-highlight-background);
+    border: 1px solid var(--border-color);
+    background-color: var(--background-color);
     box-shadow: 0px 5px 5px rgba(0,0,0,0.2);
 }
 .dialog header {
     display: flex;
     flex-direction: row;
     padding: 0.25rem;
-    border: 1px solid var(--light-border);
+    border: 1px solid var(--border-color);
     border-width: 0 0 1px 0;
 }
 .dialog header label {
@@ -53,6 +103,6 @@ body {
     font-weight: bold;
 }
 .dialog hr {
-    border: 1px solid var(--light-border);
+    border: 1px solid var(--border-color);
     border-width: 1px 0 0 0;
 }

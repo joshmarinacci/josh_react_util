@@ -10,6 +10,13 @@ export declare function VBox(props: {
     children: ReactNode;
     className?: string;
 }): JSX.Element;
+export declare function FillPage(props: {
+    children: ReactNode;
+}): JSX.Element;
+export declare function TabbedPanel(props: {
+    titles: string[];
+    children: ReactNode;
+}): JSX.Element;
 declare type ShowDialogType = (view: JSX.Element | null, visible: boolean) => void;
 interface DialogContextInterface {
     show(view: JSX.Element): void;

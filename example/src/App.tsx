@@ -1,22 +1,26 @@
-import React, {useContext} from 'react';
+import React, {ReactNode, useContext, useState} from 'react';
 import './App.css';
-import {HBox, Spacer,
+import {
+    HBox, Spacer,
     DialogContext, DialogContainer,
-    sampleDialogContext
+    sampleDialogContext, toClass, VBox
 } from "josh_react_util";
+
 
 function Content():JSX.Element {
     let dm = useContext(DialogContext)
-    console.log("dm is",dm)
-    return <div>
-    <HBox>
-        <button>hi</button>
-        <Spacer></Spacer>
-        <button onClick={()=>{
-            dm.show(<button onClick={()=>dm.hide()}>I'm a dialog</button>)
-        }}>there</button>
-    </HBox>
-    </div>
+    return <FillPage>
+        <TabbedPanel titles={["First","Second"]}>
+            <VBox>
+                <button>hi</button>
+                <Spacer></Spacer>
+                <button onClick={()=>{
+                    dm.show(<button onClick={()=>dm.hide()}>I'm a dialog</button>)
+                }}>there</button>
+            </VBox>
+            <button>second page</button>
+        </TabbedPanel>
+    </FillPage>
 }
 function App():JSX.Element {
   return (
