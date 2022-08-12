@@ -2,13 +2,31 @@
   "name": "josh_react_util",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./lib/cjs/index.js",
+  "module": "./lib/esm/index.js",
+  "types": "./lib/esm/index.d.ts",
+  "files": [
+    "./lib"
+  ],
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "build:esm": "tsc",
+    "build:cjs": "tsc --module commonjs --outDir lib/cjs",
+    "copy-files": "cp ./src/*.css ./lib/esm/"
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "typescript": "^4.7.4"
-  }
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^4.7.4",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "@types/react": "^18.0.17",
+    "@types/react-dom": "^18.0.6"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "build:cjs": "tsc --module commonjs --outDir lib/cjs"
 }
