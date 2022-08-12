@@ -71,7 +71,7 @@ export function DialogContainer() {
     })
     return <div className={toClass({
         dialogWrapper:true,
-        visible:true,
+        visible:content!==null,
     })}>
         <span>dialog is here</span>
         {content?content:"no content"}
