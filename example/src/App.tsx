@@ -3,7 +3,7 @@ import './App.css';
 import {
     HBox, Spacer,
     DialogContext, DialogContainer,
-    sampleDialogContext, toClass, VBox
+    sampleDialogContext, toClass, VBox, FillPage, TabbedPanel
 } from "josh_react_util";
 
 
