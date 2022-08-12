@@ -1,0 +1,58 @@
+body {
+    --light-border: red;
+    --light-highlight-background: green;
+}
+.vbox {
+    display: flex;
+    flex-direction: column;
+}
+.hbox {
+    display: flex;
+    flex-direction: row;
+}
+
+.spacer {
+    flex: 1.0;
+}
+
+
+.dialogWrapper {
+    position: absolute;
+    top:0;
+    left:0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(255,255,255,0.8);
+    display: none;
+}
+.dialogWrapper.visible {
+    display: block;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.dialog {
+    padding: 1em;
+    min-width: 20rem;
+    max-width: 30rem;
+    min-height: 10rem;
+    border: 1px solid var(--light-border);
+    background-color: var(--light-highlight-background);
+    box-shadow: 0px 5px 5px rgba(0,0,0,0.2);
+}
+.dialog header {
+    display: flex;
+    flex-direction: row;
+    padding: 0.25rem;
+    border: 1px solid var(--light-border);
+    border-width: 0 0 1px 0;
+}
+.dialog header label {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+.dialog hr {
+    border: 1px solid var(--light-border);
+    border-width: 1px 0 0 0;
+}
