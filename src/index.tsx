@@ -24,15 +24,27 @@ export function toClass(param: object):string {
 }
 
 export function HBox(props: { children: ReactNode, className?:string }) {
-    return <div className={"hbox " + props.className?props.className:""} {...props}>{props.children}</div>
+    let cls = toClass({
+        hbox:true,
+        [props.className]:(!!props.className),
+    })
+    return <div className={cls} {...props}>{props.children}</div>
 }
 
 export function VBox(props: { children: ReactNode, className?:string }) {
-    return <div className={"vbox " + props.className?props.className:""} {...props}>{props.children}</div>
+    let cls = toClass({
+        vbox:true,
+        [props.className]:(!!props.className),
+    })
+    return <div className={cls} {...props}>{props.children}</div>
 }
 
-export function FillPage(props: { children: ReactNode }) {
-    return <div className={"fill-page"}>{props.children}</div>
+export function FillPage(props: { children: ReactNode, className?:string }) {
+    let cls = toClass({
+        'fill-page':true,
+        [props.className]:(!!props.className),
+    })
+    return <div className={cls}>{props.children}</div>
 }
 
 export function TabbedPanel(props: { titles:string[], children:ReactNode}) {

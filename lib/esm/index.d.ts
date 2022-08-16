@@ -12,6 +12,7 @@ export declare function VBox(props: {
 }): JSX.Element;
 export declare function FillPage(props: {
     children: ReactNode;
+    className?: string;
 }): JSX.Element;
 export declare function TabbedPanel(props: {
     titles: string[];
