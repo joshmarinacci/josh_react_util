@@ -16,7 +16,9 @@
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {},
+  "dependencies": {
+    "josh_js_util": "^0.0.9"
+  },
   "devDependencies": {
     "typescript": "^4.7.4",
     "react": "^18.2.0",

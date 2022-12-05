@@ -1,6 +1,7 @@
 import React, {createContext, ReactNode, useContext, useEffect, useState} from "react"
 
 import "./index.css"
+import {Point} from "josh_js_util";
 
 /*
 - [ ] simple Dark and light themes with css variables
@@ -100,7 +101,6 @@ export function DialogContainer() {
     let [content, set_content] = useState<JSX.Element|null>(null)
     useEffect(()=>{
         dm.on_change(v => {
-            console.log("changing dialog")
             set_content(v)
         })
     })
@@ -108,7 +108,103 @@ export function DialogContainer() {
         dialogWrapper:true,
         visible:content!==null,
     })}>
-        <span>dialog is here</span>
         {content?content:"no content"}
+    </div>
+}
+
+
+
+
+
+
+
+export type PopupDirection = "left" | "right" | "below" | "above"
+export type PopupEvent = {
+    type:'popup-event',
+    content:JSX.Element,
+    owner:any,
+    offset:Point,
+    direction: PopupDirection
+    visible:boolean
+}
+export type ShowPopupType = (e:PopupEvent) => void
+export interface PopupContextInterface {
+    show_at(view: JSX.Element, owner: any, direction?:PopupDirection, offset?:Point ): void
+    hide():void
+    on_change(cb:ShowPopupType): void
+}
+
+export class PopupContextImpl implements PopupContextInterface {
+    private listeners: ShowPopupType[];
+    constructor() {
+        this.listeners = []
+    }
+    hide(): void {
+        let evt:PopupEvent = {
+            type:"popup-event",
+            direction:"below",
+            owner:null,
+            offset: new Point(0,0),
+            visible:false,
+            content:null,
+        }
+        this.listeners.forEach(cb => cb(evt))
+    }
+
+    on_change(cb:ShowPopupType): void {
+        this.listeners.push(cb)
+    }
+
+    show_at(view: JSX.Element, owner: any, direction?:PopupDirection, offset?:Point, ): void {
+        let evt:PopupEvent = {
+            type:"popup-event",
+            direction:direction || "right",
+            owner:owner,
+            offset: offset || new Point(0,0),
+            content:view,
+            visible:true,
+        }
+        this.listeners.forEach(cb => cb(evt))
+    }
+
+}
+const samplePopupContext: PopupContextInterface = new PopupContextImpl()
+export const PopupContext = createContext<PopupContextInterface>(samplePopupContext);
+
+
+export function PopupContainer() {
+    let pm = useContext(PopupContext)
+    let [event, set_event] = useState<PopupEvent | null>(null)
+    let [visible, set_visible] = useState(false)
+    useEffect(()=>{
+        pm.on_change((e) => {
+            set_event(e)
+            set_visible(e.visible)
+        })
+    })
+    const clickedScrim = () => {
+        set_visible(false)
+    }
+    let x = 0
+    let y = 0
+    let content = <div>"no content"</div>
+    if(event && event.visible) {
+        let rect = event.owner.getBoundingClientRect();
+        x = rect.left;
+        if(event.direction === 'right') {
+            x = rect.left + rect.width
+        }
+        y = rect.top + rect.height;
+        content = event.content
+    }
+    const style = {
+        left: `${x}px`,
+        top: `${y}px`,
+    }
+    return <div className={toClass({
+        popupScrim:true,
+        visible:visible,
+    })} onClick={clickedScrim}>
+        <div className={"popupWrapper"} style={style}>{content}</div>
     </div>
 }
