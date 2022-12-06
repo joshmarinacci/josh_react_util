@@ -1,4 +1,5 @@
 import React, { ReactNode } from "react";
+import { Point } from "josh_js_util";
 import "./index.css";
 export declare function Spacer(): JSX.Element;
 export declare function toClass(param: object): string;
@@ -39,12 +40,13 @@ export declare type PopupEvent = {
     type: 'popup-event';
     content: JSX.Element;
     owner: any;
+    offset: Point;
     direction: PopupDirection;
     visible: boolean;
 };
 export declare type ShowPopupType = (e: PopupEvent) => void;
 export interface PopupContextInterface {
-    show_at(view: JSX.Element, owner: any, direction?: PopupDirection): void;
+    show_at(view: JSX.Element, owner: any, direction?: PopupDirection, offset?: Point): void;
     hide(): void;
     on_change(cb: ShowPopupType): void;
 }
@@ -53,7 +55,7 @@ export declare class PopupContextImpl implements PopupContextInterface {
     constructor();
     hide(): void;
     on_change(cb: ShowPopupType): void;
-    show_at(view: JSX.Element, owner: any, direction?: PopupDirection): void;
+    show_at(view: JSX.Element, owner: any, direction?: PopupDirection, offset?: Point): void;
 }
 export declare const PopupContext: React.Context<PopupContextInterface>;
 export declare function PopupContainer(): JSX.Element;

@@ -6,6 +6,7 @@ import {
     sampleDialogContext, toClass, VBox, FillPage, TabbedPanel,
     PopupContext, PopupContextImpl, PopupContainer,
 } from "josh_react_util";
+import {Point} from "josh_js_util";
 
 
 function ExampleDialog() {
@@ -46,7 +47,7 @@ function Content():JSX.Element {
             </VBox>
             <HBox>
                 <button onClick={(e)=>{
-                    pm.show_at(<ExamplePopup/>,e.target,'right')
+                    pm.show_at(<ExamplePopup/>,e.target,'right', new Point(200,200))
                 }}>popup</button>
             </HBox>
         </TabbedPanel>

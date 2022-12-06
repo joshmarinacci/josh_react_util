@@ -1,4 +1,5 @@
 import React, {createContext, ReactNode, useContext, useEffect, useState} from "react"
+import {Point} from "josh_js_util"
 
 import "./index.css"
 
@@ -123,13 +124,13 @@ export type PopupEvent = {
     type:'popup-event',
     content:JSX.Element,
     owner:any,
-    // offset:Point,
+    offset:Point,
     direction: PopupDirection
     visible:boolean
 }
 export type ShowPopupType = (e:PopupEvent) => void
 export interface PopupContextInterface {
-    show_at(view: JSX.Element, owner: any, direction?:PopupDirection,): void
+    show_at(view: JSX.Element, owner: any, direction?:PopupDirection, offset?:Point): void
     hide():void
     on_change(cb:ShowPopupType): void
 }
@@ -144,7 +145,7 @@ export class PopupContextImpl implements PopupContextInterface {
             type:"popup-event",
             direction:"below",
             owner:null,
-            // offset: new Point(0,0),
+            offset: new Point(0,0),
             visible:false,
             content:null,
         }
@@ -155,12 +156,12 @@ export class PopupContextImpl implements PopupContextInterface {
         this.listeners.push(cb)
     }
 
-    show_at(view: JSX.Element, owner: any, direction?:PopupDirection,  ): void {
+    show_at(view: JSX.Element, owner: any, direction?:PopupDirection, offset?:Point ): void {
         let evt:PopupEvent = {
             type:"popup-event",
             direction:direction || "right",
             owner:owner,
-            // offset: offset || new Point(0,0),
+            offset: offset || new Point(0,0),
             content:view,
             visible:true,
         }
@@ -200,10 +201,10 @@ export function PopupContainer() {
             x = rect.left + rect.width
         }
         content = event.content
-        // if(event.offset) {
-        //     x += event.offset.x
-        //     y += event.offset.y
-        // }
+        if(event.offset) {
+            x += event.offset.x
+            y += event.offset.y
+        }
     }
     const style = {
         left: `${x}px`,
