@@ -1,6 +1,5 @@
 import React, { ReactNode } from "react";
 import "./index.css";
-import { Point } from "josh_js_util";
 export declare function Spacer(): JSX.Element;
 export declare function toClass(param: object): string;
 export declare function HBox(props: {
@@ -35,18 +34,17 @@ export declare class DialogContextImpl implements DialogContextInterface {
 export declare const sampleDialogContext: DialogContextInterface;
 export declare const DialogContext: React.Context<DialogContextInterface>;
 export declare function DialogContainer(): JSX.Element;
-export declare type PopupDirection = "left" | "right" | "below" | "above";
+export declare type PopupDirection = "left" | "right" | "below" | "above" | "inside-top-left";
 export declare type PopupEvent = {
     type: 'popup-event';
     content: JSX.Element;
     owner: any;
-    offset: Point;
     direction: PopupDirection;
     visible: boolean;
 };
 export declare type ShowPopupType = (e: PopupEvent) => void;
 export interface PopupContextInterface {
-    show_at(view: JSX.Element, owner: any, direction?: PopupDirection, offset?: Point): void;
+    show_at(view: JSX.Element, owner: any, direction?: PopupDirection): void;
     hide(): void;
     on_change(cb: ShowPopupType): void;
 }
@@ -55,7 +53,7 @@ export declare class PopupContextImpl implements PopupContextInterface {
     constructor();
     hide(): void;
     on_change(cb: ShowPopupType): void;
-    show_at(view: JSX.Element, owner: any, direction?: PopupDirection, offset?: Point): void;
+    show_at(view: JSX.Element, owner: any, direction?: PopupDirection): void;
 }
 export declare const PopupContext: React.Context<PopupContextInterface>;
 export declare function PopupContainer(): JSX.Element;

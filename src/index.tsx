@@ -1,7 +1,7 @@
 import React, {createContext, ReactNode, useContext, useEffect, useState} from "react"
 
 import "./index.css"
-import {Point} from "josh_js_util";
+
 
 /*
 - [ ] simple Dark and light themes with css variables
@@ -118,18 +118,18 @@ export function DialogContainer() {
 
 
 
-export type PopupDirection = "left" | "right" | "below" | "above"
+export type PopupDirection = "left" | "right" | "below" | "above" | "inside-top-left"
 export type PopupEvent = {
     type:'popup-event',
     content:JSX.Element,
     owner:any,
-    offset:Point,
+    // offset:Point,
     direction: PopupDirection
     visible:boolean
 }
 export type ShowPopupType = (e:PopupEvent) => void
 export interface PopupContextInterface {
-    show_at(view: JSX.Element, owner: any, direction?:PopupDirection, offset?:Point ): void
+    show_at(view: JSX.Element, owner: any, direction?:PopupDirection,): void
     hide():void
     on_change(cb:ShowPopupType): void
 }
@@ -144,7 +144,7 @@ export class PopupContextImpl implements PopupContextInterface {
             type:"popup-event",
             direction:"below",
             owner:null,
-            offset: new Point(0,0),
+            // offset: new Point(0,0),
             visible:false,
             content:null,
         }
@@ -155,12 +155,12 @@ export class PopupContextImpl implements PopupContextInterface {
         this.listeners.push(cb)
     }
 
-    show_at(view: JSX.Element, owner: any, direction?:PopupDirection, offset?:Point, ): void {
+    show_at(view: JSX.Element, owner: any, direction?:PopupDirection,  ): void {
         let evt:PopupEvent = {
             type:"popup-event",
             direction:direction || "right",
             owner:owner,
-            offset: offset || new Point(0,0),
+            // offset: offset || new Point(0,0),
             content:view,
             visible:true,
         }
@@ -191,11 +191,19 @@ export function PopupContainer() {
     if(event && event.visible) {
         let rect = event.owner.getBoundingClientRect();
         x = rect.left;
+        y = rect.top + rect.height;
+        if(event.direction === "inside-top-left") {
+            x = 0
+            y = 0
+        }
         if(event.direction === 'right') {
             x = rect.left + rect.width
         }
-        y = rect.top + rect.height;
         content = event.content
+        // if(event.offset) {
+        //     x += event.offset.x
+        //     y += event.offset.y
+        // }
     }
     const style = {
         left: `${x}px`,

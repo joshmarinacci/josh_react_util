@@ -1,5 +1,4 @@
 import React, {ReactNode, useContext, useState} from 'react';
-import {Point} from "josh_js_util"
 import './App.css';
 import {
     HBox, Spacer,
@@ -35,7 +34,7 @@ function ExamplePopup() {
 }
 function Content():JSX.Element {
     let dm = useContext(DialogContext)
-    let pm = useContext(PopupContext)
+    let pm = useContext(PopupContext) as PopupContextImpl
     return <FillPage>
         <TabbedPanel titles={["First","Second"]}>
             <VBox>
@@ -47,7 +46,7 @@ function Content():JSX.Element {
             </VBox>
             <HBox>
                 <button onClick={(e)=>{
-                    pm.show_at(<ExamplePopup/>,e.target,'right',new Point(100,100))
+                    pm.show_at(<ExamplePopup/>,e.target,'right')
                 }}>popup</button>
             </HBox>
         </TabbedPanel>
