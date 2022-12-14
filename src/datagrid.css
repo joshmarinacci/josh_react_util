@@ -1,0 +1,55 @@
+.wrapper {
+    border: 1px solid black;
+    max-height: 300px;
+    overflow: scroll;
+}
+table {
+    border: 1px solid black;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+table:focus-within {
+    outline: 3px solid aqua;
+}
+td {
+    border:1px solid black;
+    padding: 0.25rem 0.5rem;
+    min-width: 10rem;
+    border-width: 0 1px 1px 0;
+}
+td:last-child {
+    border-width: 0 0 1px 0;
+}
+td.selected.editing {
+    background-color: red;
+    padding:0;
+}
+td.editing input {
+    width: 10rem;
+}
+th {
+    border:1px solid black;
+    border-width: 0 1px 1px 0;
+    background-color: lightgray;
+    padding: 0.25rem 0.5rem;
+}
+th:last-child {
+    border-width: 0 0 1px 0;
+}
+
+tr.selected {
+    background-color: #999;
+}
+td.selected {
+    background-color: #444;
+}
+
+thead {
+    position: sticky;
+    top:0;
+    z-index: 2;
+}
+.row-header {
+    position: sticky;
+    left: 0;
+}
