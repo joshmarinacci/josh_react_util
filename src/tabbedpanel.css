@@ -1,0 +1,20 @@
+.tabbed-pane {
+    border: 0px solid red;
+}
+
+.tab-titles {
+    background-color: var(--toolbar-background-color);
+    border: 1px solid var(--border-color);
+    border-bottom-width: 0;
+}
+.tab-title {
+    border: 1px solid var(--border-color);
+    margin: 0.25rem 0.25rem 0 0.25rem;
+    border-radius: 0.25rem;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom-width: 0;
+}
+.tab-content {
+    border: 1px solid var(--border-color);
+}
