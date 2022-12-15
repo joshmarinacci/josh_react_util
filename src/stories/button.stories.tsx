@@ -1,4 +1,4 @@
-import {DialogContainer, HBox} from "../index";
+import {HBox} from "../index";
 import {ComponentMeta, ComponentStory} from "@storybook/react";
 import {Button} from "@storybook/react/demo";
 import React from "react";
