@@ -7,7 +7,6 @@ body {
     --selected-text-color: white;
 
     --toolbar-background-color: #ccc;
-
 }
 
 body {
@@ -32,27 +31,6 @@ button {
     box-sizing: border-box;
 }
 
-.tabbed-pane {
-    border: 0px solid red;
-}
-
-.tab-titles {
-    background-color: var(--toolbar-background-color);
-    border: 1px solid var(--border-color);
-    border-bottom-width: 0;
-}
-.tab-title {
-    border: 1px solid var(--border-color);
-    margin: 0.25rem 0.25rem 0 0.25rem;
-    border-radius: 0.25rem;
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-    border-bottom-width: 0;
-}
-.tab-content {
-    border: 1px solid var(--border-color);
-}
-
 .vbox {
     display: flex;
     flex-direction: column;
@@ -66,83 +44,12 @@ button {
     flex: 1.0;
 }
 
+.toolbar {
+    background-color: var(--toolbar-background-color);
+}
 
-/* ============ dialog ============== */
-.dialogWrapper {
-    position: absolute;
-    top:0;
-    left:0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(255,255,255,0.8);
-    display: none;
-}
-.dialogWrapper.visible {
-    display: block;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-.dialog {
-    padding: 1em;
-    min-width: 20rem;
-    max-width: 30rem;
-    min-height: 10rem;
-    border: 1px solid var(--border-color);
-    background-color: var(--background-color);
-    box-shadow: 0px 5px 5px rgba(0,0,0,0.2);
-    display: flex;
-    flex-direction: column;
-}
-.dialog > header {
+.wrapbox {
     display: flex;
     flex-direction: row;
-    padding: 0.25rem;
-    border: 1px solid var(--border-color);
-    border-width: 0 0 1px 0;
-}
-.dialog > header label {
-    font-size: 1.2rem;
-    font-weight: bold;
-}
-.dialog > footer {
-    display: flex;
-    flex-direction: row;
-    padding: 0.25rem;
-    border: 1px solid var(--border-color);
-    border-width: 1px 0 0px 0;
-}
-.dialog > section {
-    flex: 1.0;
-}
-.dialog hr {
-    border: 1px solid var(--border-color);
-    border-width: 1px 0 0 0;
-}
-
-
-
-
-.popupScrim {
-    position: fixed;
-    top:0;
-    bottom:0;
-    left:0;
-    right:0;
-    z-index: 100;
-    background-color: rgba(255,0,255,0.0);
-    display: none;
-}
-.popupScrim.visible {
-    display: flex;
-    /*flex-direction: column;*/
-    /*align-items: center;*/
-    /*justify-content: center;*/
-}
-
-
-.popupWrapper {
-    position: absolute;
-    background-color: var(--background-color);
+    flex-wrap: wrap;
 }
