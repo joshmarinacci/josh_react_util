@@ -48,3 +48,11 @@ export function FillPage(props: { children: ReactNode, className?:string }) {
     })
     return <div className={cls}>{props.children}</div>
 }
+
+export function WrapBox(props: {children: ReactNode, className?:string}) {
+    let cls = toClass({
+        wrapbox:true,
+        [props.className]:(!!props.className),
+    })
+    return <div className={cls} {...props}>{props.children}</div>
+}

@@ -47,3 +47,9 @@ button {
 .toolbar {
     background-color: var(--toolbar-background-color);
 }
+
+.wrapbox {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
