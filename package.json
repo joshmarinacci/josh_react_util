@@ -14,8 +14,7 @@
     "build:cjs": "tsc --module commonjs --outDir lib/cjs",
     "copy-files": "cp ./src/*.css ./lib/esm/",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook",
-    "version": "npm run build && npm run copy-files && npm version patch"
+    "build-storybook": "build-storybook"
   },
   "author": "",
   "license": "ISC",
