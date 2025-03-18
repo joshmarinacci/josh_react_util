@@ -25,31 +25,7 @@ button {
     color: var(--selected-text-color);
 }
 
-.fill-page {
-    border: 0px solid red;
-    min-height: 100vh;
-    box-sizing: border-box;
-}
-
-.vbox {
-    display: flex;
-    flex-direction: column;
-}
-.hbox {
-    display: flex;
-    flex-direction: row;
-}
-
-.spacer {
-    flex: 1.0;
-}
-
-.toolbar {
+.panel {
     background-color: var(--toolbar-background-color);
-}
-
-.wrapbox {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+    border: 1px solid black;
 }

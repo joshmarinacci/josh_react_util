@@ -1,6 +1,6 @@
-import React, {KeyboardEvent, RefObject, useEffect, useRef, useState} from "react";
-import {toClass} from "./index";
+import React, {KeyboardEvent, ReactElement, RefObject, useEffect, useRef, useState} from "react";
 import "./datagrid.css"
+import {toClass} from "./util";
 
 export interface CellRef {
     row:number,
@@ -15,8 +15,8 @@ export interface DataSource {
 }
 
 export interface CellRenderer {
-    renderCellView(cell: CellRef, value: any): JSX.Element | string
-    renderCellEditor(cell: CellRef, value: any, source: DataSource, stopEditing: () => any): JSX.Element | null
+    renderCellView(cell: CellRef, value: any): ReactElement | string
+    renderCellEditor(cell: CellRef, value: any, source: DataSource, stopEditing: () => any): ReactElement | null
 }
 
 export function useAutoFocus<E extends HTMLElement>():RefObject<E> {
@@ -26,6 +26,7 @@ export function useAutoFocus<E extends HTMLElement>():RefObject<E> {
             ref.current.focus()
         }
     })
+    // @ts-ignore
     return ref
 }
 
@@ -182,11 +183,11 @@ function DataHeader(props: { source: DataSource }) {
 }
 
 class StringCellRenderer implements CellRenderer {
-    renderCellEditor(cell: CellRef, value: any, source: DataSource, stopEditing: () => any): JSX.Element | null {
+    renderCellEditor(cell: CellRef, value: any, source: DataSource, stopEditing: () => any): ReactElement | null {
         return null
     }
 
-    renderCellView(cell: CellRef, value: any): JSX.Element | string {
+    renderCellView(cell: CellRef, value: any): ReactElement | string {
         return value + ""
     }
 

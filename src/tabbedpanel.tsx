@@ -1,6 +1,6 @@
 import React, {ReactNode, useState} from "react";
-import {toClass} from "./index";
 import "./tabbedpanel.css"
+import {toClass} from "./util";
 export function TabbedPanel(props: { titles:string[], children:ReactNode}) {
     let [selected, set_selected] = useState(()=>props.titles[0])
     let child = null

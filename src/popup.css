@@ -15,9 +15,11 @@
     /*justify-content: center;*/
 }
 
-
 .popupWrapper {
     position: absolute;
     background-color: var(--background-color);
 }
 
+.popupBackground {
+    border: 1px solid black;
+}

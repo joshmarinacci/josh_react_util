@@ -1,10 +1,10 @@
 import React, {createContext, useContext, useEffect, useState} from "react";
-import {toClass} from "./index";
 
 import "./dialog.css"
-type ShowDialogType = (view:JSX.Element|null, visible:boolean) => void
+import {toClass} from "./util";
+type ShowDialogType = (view:Element|null, visible:boolean) => void
 interface DialogContextInterface {
-    show(view: JSX.Element): void
+    show(view: Element): void
     hide():void
     on_change(cb:ShowDialogType): void
 }
@@ -21,7 +21,7 @@ export class DialogContextImpl implements DialogContextInterface {
         this.listeners.push(cb)
     }
 
-    show(view: JSX.Element): void {
+    show(view: Element): void {
         this.listeners.forEach(cb => cb(view,true))
     }
 

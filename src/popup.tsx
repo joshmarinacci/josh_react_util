@@ -1,12 +1,12 @@
 import "./popup.css"
 import {Point} from "josh_js_util";
-import React, {createContext, useContext, useEffect, useState} from "react";
-import {toClass} from "./index";
+import React, {createContext, ReactElement, ReactNode, useContext, useEffect, useState} from "react";
+import {toClass} from "./util";
 
 export type PopupDirection = "left" | "right" | "below" | "above" | "inside-top-left"
 export type PopupEvent = {
     type:'popup-event',
-    content:JSX.Element,
+    content:ReactElement,
     owner:any,
     offset:Point,
     direction: PopupDirection
@@ -14,7 +14,7 @@ export type PopupEvent = {
 }
 export type ShowPopupType = (e:PopupEvent) => void
 export interface PopupContextInterface {
-    show_at(view: JSX.Element, owner: any, direction?:PopupDirection, offset?:Point): void
+    show_at(view: ReactElement, owner: any, direction?:PopupDirection, offset?:Point): void
     hide():void
     on_change(cb:ShowPopupType): void
 }
@@ -31,6 +31,7 @@ export class PopupContextImpl implements PopupContextInterface {
             owner:null,
             offset: new Point(0,0),
             visible:false,
+            // @ts-ignore
             content:null,
         }
         this.listeners.forEach(cb => cb(evt))
@@ -40,7 +41,7 @@ export class PopupContextImpl implements PopupContextInterface {
         this.listeners.push(cb)
     }
 
-    show_at(view: JSX.Element, owner: any, direction?:PopupDirection, offset?:Point ): void {
+    show_at(view: ReactElement, owner: any, direction?:PopupDirection, offset?:Point ): void {
         let evt:PopupEvent = {
             type:"popup-event",
             direction:direction || "right",
@@ -68,6 +69,7 @@ export function PopupContainer() {
         })
     })
     const clickedScrim = () => {
+        console.log("clicked on the scrim")
         set_visible(false)
     }
     let x = 0
@@ -100,4 +102,13 @@ export function PopupContainer() {
     })} onClick={clickedScrim}>
         <div className={"popupWrapper"} style={style}>{content}</div>
     </div>
+}
+
+export function PopupBackground(props: { children: ReactNode }) {
+    return <div className="popupBackground" {...props}
+                onClick={(e) => {
+                    e.stopPropagation()
+                    e.preventDefault()
+                }}
+    />;
 }
