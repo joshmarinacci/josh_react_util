@@ -1,0 +1,8 @@
+.debug {
+    :focus-within {
+        border: 3px dotted magenta;
+    }
+    :focus {
+        border: 1px solid cyan;
+    }
+}

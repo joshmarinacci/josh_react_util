@@ -10,16 +10,13 @@
 }
 .popupScrim.visible {
     display: flex;
-    /*flex-direction: column;*/
-    /*align-items: center;*/
-    /*justify-content: center;*/
 }
 
-.popupWrapper {
+.popup-wrapper {
     position: absolute;
     background-color: var(--background-color);
 }
 
-.popupBackground {
+.popup-background {
     border: 1px solid black;
 }

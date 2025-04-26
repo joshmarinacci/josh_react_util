@@ -15,7 +15,7 @@
     align-items: center;
     justify-content: center;
 }
-.dialog {
+dialog {
     padding: 1em;
     min-width: 20rem;
     max-width: 30rem;
@@ -26,28 +26,29 @@
     display: flex;
     flex-direction: column;
 }
-.dialog > header {
+dialog > header {
     display: flex;
     flex-direction: row;
     padding: 0.25rem;
     border: 1px solid var(--border-color);
     border-width: 0 0 1px 0;
 }
-.dialog > header label {
+dialog > header label {
     font-size: 1.2rem;
     font-weight: bold;
 }
-.dialog > footer {
+dialog > footer {
     display: flex;
     flex-direction: row;
+    justify-content: end;
     padding: 0.25rem;
     border: 1px solid var(--border-color);
     border-width: 1px 0 0px 0;
 }
-.dialog > section {
+dialog > section {
     flex: 1.0;
 }
-.dialog hr {
+dialog hr {
     border: 1px solid var(--border-color);
     border-width: 1px 0 0 0;
 }

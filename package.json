@@ -21,7 +21,7 @@
   },
   "scripts": {
     "build": "npm run clean && node build.js",
-    "start": "mkdir -p build && cp public/* build && esbuild src/index.tsx --bundle --outdir=build --watch --serve --servedir=build",
+    "dev": "mkdir -p build && cp public/* build && esbuild src/index.tsx --bundle --outdir=build --watch --serve --servedir=build",
     "clean": "rm -rf build",
     "tsc": "tsc",
     "release-patch": "npm run build && tsc --emitDeclarationOnly --noCheck && npm version patch && npm publish"
