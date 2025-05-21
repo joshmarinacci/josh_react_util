@@ -113,8 +113,10 @@ ul {
     min-width: 10rem;
     background-color: var(--control-background-color);
     position: relative;
+    box-sizing: border-box;
 
     li {
+        box-sizing: border-box;
         display: flex;
         flex-direction: row;
         justify-content: space-between;
@@ -122,6 +124,7 @@ ul {
         align-items: baseline;
         background-color: var(--control-background-color);
         transition: transform 0.2s;
+        width: 100%;
 
         &:hover {
             background-color: var(--control-background-color-hover);
@@ -131,6 +134,7 @@ ul {
             box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.4);
             position: absolute;
             z-index: 100;
+            width: 100%;
         }
         span {
             border: 1px solid #444;

@@ -1,5 +1,6 @@
 import "./draglist.css"
-import {MouseEvent, useRef} from "react"
+import {MouseEvent, useRef, useState} from "react"
+import {toClass} from "./util";
 const log = (...args:any[]) => console.log("",...args);
 
 class DragState {
@@ -94,6 +95,17 @@ class DragState {
     }
 }
 
+const data = [
+    "a",
+    "b",
+    "c",
+    "d",
+    "e",
+    "f",
+    "g",
+    "h"
+]
+
 export function DragListDemo() {
     const listRef = useRef<HTMLUListElement|null>(null)
     const onMouseDown = (e:MouseEvent<HTMLElement>) => {
@@ -104,22 +116,28 @@ export function DragListDemo() {
         ds.startMouseDrag(clientY)
     }
 
-    const props = {
-        onMouseDown: onMouseDown,
-    }
+    const [sel, setSel] = useState(data[0])
 
     return <ul ref={listRef} style={{
         maxHeight: '150px',
         overflow: 'scroll',
     }}>
-        <li>Drag Item one   <span {...props}>D</span></li>
-        <li>Drag Item two   <span {...props}>D</span></li>
-        <li>Drag Item three <span {...props}>D</span></li>
-        <hr/>
-        <li>Drag Item four  <span {...props}>D</span></li>
-        <li>Drag Item five  <span {...props}>D</span></li>
-        <li>Drag Item six   <span {...props}>D</span></li>
-        <li>Drag Item seven <span {...props}>D</span></li>
-        <li>Drag Item eight <span {...props}>D</span></li>
+        {data.map(d => {
+            return <li key={d}
+                       className={toClass({ selected: sel===d })}
+                       onMouseDown={(e:MouseEvent<HTMLElement>) => setSel(d)}
+            >
+                {d}
+                <span onMouseDown={onMouseDown}>D</span>
+            </li>
+        })}
+        {/*<li>Drag Item two   <span {...props}>D</span></li>*/}
+        {/*<li>Drag Item three <span {...props}>D</span></li>*/}
+        {/*<hr/>*/}
+        {/*<li>Drag Item four  <span {...props}>D</span></li>*/}
+        {/*<li>Drag Item five  <span {...props}>D</span></li>*/}
+        {/*<li>Drag Item six   <span {...props}>D</span></li>*/}
+        {/*<li>Drag Item seven <span {...props}>D</span></li>*/}
+        {/*<li>Drag Item eight <span {...props}>D</span></li>*/}
     </ul>
 }
