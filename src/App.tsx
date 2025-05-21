@@ -4,6 +4,7 @@ import {PopupContainer, PopupContext, PopupContextImpl} from "./popup";
 import {useContext, useState} from "react";
 import "./index.css"
 import {DialogContainer, DialogContext, DialogContextImpl} from "./dialog";
+import {DragListDemo} from "./draglist";
 
 function PopupContent() {
     const pm = useContext(PopupContext);
@@ -79,7 +80,7 @@ export function App() {
     return <div className="debug">
         <DialogContext.Provider value={new DialogContextImpl()}>
             <PopupContext.Provider value={new PopupContextImpl()}>
-                <TabbedPanel titles={['Inputs', 'Layout', 'Dialog']}>
+                <TabbedPanel titles={['Inputs', 'Layout', 'Dialog','Drag List']}>
                     <VBox className={'show-focus-within'}>
                         <PopupDemo/>
                     </VBox>
@@ -88,6 +89,9 @@ export function App() {
                     </VBox>
                     <VBox>
                         <DialogDemo/>
+                    </VBox>
+                    <VBox>
+                        <DragListDemo/>
                     </VBox>
                 </TabbedPanel>
                 <DialogContainer/>

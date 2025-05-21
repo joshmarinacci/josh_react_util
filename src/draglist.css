@@ -1,0 +1,158 @@
+/* ========== define variables ============= */
+:root {
+    --radius: 0.25rem;
+    --padding: 0.25rem 0.5rem;
+    --delay: 0.25s;
+
+    --content-background-color: magenta;
+    --content-border-color: magenta;
+    --content-text-color: magenta;
+
+    --secondary-background-color: magenta;
+    --secondary-border-color: magenta;
+    --secondary-text-color: magenta;
+
+    --control-background-color: magenta;
+    --control-border-color: magenta;
+    --control-text-color: magenta;
+    --control-background-color-hover: magenta;
+    --control-border-color-hover: magenta;
+    --control-text-color-hover: magenta;
+    --control-background-color-disabled: magenta;
+    --control-border-color-disabled: magenta;
+    --control-text-color-disabled: magenta;
+
+    --input-background-color: magenta;
+    --input-border-color: magenta;
+    --input-text-color: magenta;
+    --input-background-color-hover: magenta;
+    --input-border-color-hover: magenta;
+    --input-text-color-hover: magenta;
+    --input-background-color-disabled: magenta;
+    --input-border-color-disabled: magenta;
+    --input-text-color-disabled: magenta;
+
+    --selected-background-color: magenta;
+    --selected-border-color: magenta;
+    --selected-text-color: magenta;
+    --selected-background-color-hover: magenta;
+    --selected-border-color-hover: magenta;
+    --selected-text-color-hover: magenta;
+    --selected-background-color-disabled: magenta;
+    --selected-border-color-disabled: magenta;
+    --selected-text-color-disabled: magenta;
+
+
+
+    --content-lightness: 0.95;
+    --content-background-color: oklch(var(--content-lightness) 0.0 0);
+    --content-border-color: oklch(calc(var(--content-lightness)*0.5) 0.0 0);
+    --content-text-color: oklch(calc(var(--content-lightness)*0.3) 0.0 0);
+
+    --secondary-lightness: 0.90;
+    --secondary-background-color: oklch(var(--secondary-lightness) 0.0 0);
+    --secondary-border-color: oklch(calc(var(--secondary-lightness)*0.5) 0.0 0);
+    --secondary-text-color: oklch(calc(var(--secondary-lightness)*0.3) 0.0 0);
+
+
+
+    /*
+        all controls
+            includes buttons, inputs, select, textarea, progress, meter
+    */
+    --control-lightness: 0.85;
+
+    --control-background-color: oklch(var(--control-lightness) 0.0 0);
+    --control-border-color: oklch(calc(var(--control-lightness)*0.5) 0.0 0);
+    --control-text-color: oklch(calc(var(--control-lightness)*0.3) 0.0 0);
+
+    --control-background-color-hover: oklch(calc(var(--control-lightness)*1.2) 0.0 0);
+    --control-border-color-hover: oklch(calc(var(--control-lightness)*0.8) 0.0 0);
+    --control-text-color-hover: oklch(calc(var(--control-lightness)*0.4) 0.0 0);
+
+    --control-background-color-disabled: oklch(calc(var(--control-lightness)*0.9) 0.0 0);
+    --control-border-color-disabled: oklch(calc(var(--control-lightness)*0.8) 0.0 0);
+    --control-text-color-disabled: oklch(calc(var(--control-lightness)*0.6) 0.0 0);
+
+
+
+
+    --input-lightness: 0.99;
+    --input-background-color: oklch(var(--input-lightness) 0.0 0);
+    --input-border-color: oklch(calc(var(--input-lightness)*0.5) 0.0 0);
+    --input-text-color: oklch(calc(var(--input-lightness)*0.3) 0.0 0);
+    --input-background-color-hover: oklch(var(--input-lightness) 0.0 0);
+    --input-border-color-hover: oklch(calc(var(--input-lightness)*0.8) 0.0 0);
+    --input-text-color-hover: oklch(calc(var(--input-lightness)*0.1) 0.0 0);
+    --input-background-color-disabled: oklch(calc(var(--input-lightness)*0.8) 0.0 0);
+    --input-border-color-disabled: oklch(calc(var(--input-lightness)*0.5) 0.0 0);
+    --input-text-color-disabled: oklch(calc(var(--input-lightness)*0.5) 0.0 0);
+
+
+    --selected-lightness: 0.80;
+    --selected-background-color: oklch(calc(var(--selected-lightness)*2.0) 0.7 240);
+    --selected-border-color: oklch(calc(var(--selected-lightness)*0.5) 0.0 240);
+    --selected-text-color: oklch(calc(var(--selected-lightness)*1.5) 0.0 240);
+    --selected-background-color-hover: oklch(calc(var(--selected-lightness)*1.1) 0.5 240);
+    --selected-border-color-hover: oklch(calc(var(--selected-lightness)*0.8) 0.0 0);
+    --selected-text-color-hover: oklch(calc(var(--selected-lightness)*1.5) 0.0 240);
+
+    --selected-background-color-disabled: oklch(calc(var(--selected-lightness)*0.9) 0.5 240);
+    --selected-border-color-disabled: oklch(calc(var(--selected-lightness)*0.8) 0.0 0);
+    --selected-text-color-disabled: oklch(calc(var(--selected-lightness)*0.6) 0.0 240);
+
+}
+/* ========= Lists ========== */
+ul {
+    border: 1px solid var(--control-border-color);
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    min-width: 10rem;
+    background-color: var(--control-background-color);
+    position: relative;
+
+    li {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 0.5rem;
+        align-items: baseline;
+        background-color: var(--control-background-color);
+        transition: transform 0.2s;
+
+        &:hover {
+            background-color: var(--control-background-color-hover);
+        }
+        &.dragging {
+            /*border: 1px solid black;*/
+            box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.4);
+            position: absolute;
+            z-index: 100;
+        }
+
+    }
+    hr {
+        margin: 0.5rem 0rem;
+        border: 1px solid var(--control-border-color);
+        border-width: 1px 0 0 0;
+    }
+}
+
+.selected {
+    background-color: var(--selected-background-color);
+    color: var(--selected-text-color);
+    border-color: var(--selected-border-color);
+    &:hover {
+        background-color: var(--selected-background-color-hover);
+        color: var(--selected-text-color-hover);
+        border-color: var(--selected-border-color-hover);
+    }
+    &:disabled {
+        background-color: var(--selected-background-color-disabled);
+        color: var(--selected-text-color-disabled);
+        border-color: var(--selected-border-color-disabled);
+    }
+}
