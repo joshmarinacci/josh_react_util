@@ -186,21 +186,35 @@ function CustomInput() {
 
     let value = ""
     if (inputRef.current) {
-        console.log("selection is", inputRef.current.selectionStart, inputRef.current.selectionEnd)
-        let n = text.lastIndexOf(":")
+        // console.log("selection is", inputRef.current.selectionStart, inputRef.current.selectionEnd)
+        let start = inputRef.current.selectionStart
+        if(!start) start = inputRef.current.value.length
+        let n = text.lastIndexOf(":", start)
+        console.log("last index is",n,'start is',start)
         if (n >= 0) {
-            value = text.substring(n + 1)
+            value = text.substring(n + 1, start)
         }
     }
-    console.log("value is ", value)
+
+    const insertReplacement = () => {
+        if(!inputRef.current) return;
+        let start = inputRef.current.selectionStart
+        if(!start) start = inputRef.current.value.length
+        let n = text.lastIndexOf(":", start)
+        if (n >= 0) {
+            let before = text.substring(0, n)
+            let after = text.substring(n + 1)
+            setText(before + emojis[selected] + after)
+        }
+    }
 
     let elements = completions.filter(t => {
         if (!value) return true
         if (value.trim() === "") return true
-        // console.log("checking ", t, value.trim())
         if (t.startsWith(value.trim())) return true
         return false
     })
+    elements = elements.slice().sort()
 
     const moveSelectionDown = () => {
         let n = elements.indexOf(selected) + 1
@@ -229,16 +243,14 @@ function CustomInput() {
                                moveSelectionUp()
                            }
                            if (e.key === 'Enter') {
-                               setShow(false);
-                               let n = text.lastIndexOf(":")
-                               if (n >= 0) {
-                                   let before = text.substring(0, n)
-                                   setText(before + emojis[selected])
+                               if(show) {
+                                   setShow(false)
+                                   insertReplacement()
                                }
                            }
                            if (e.key === 'Escape') {
                                e.preventDefault()
-                               setShow(false);
+                               setShow(false)
                            }
                            if (e.key === 'Tab') {
                                e.preventDefault()
