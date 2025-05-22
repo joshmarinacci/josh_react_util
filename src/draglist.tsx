@@ -163,12 +163,25 @@ export function DragListDemo() {
         }
     }
 
+    const moveSelectionUp = () => {
+        console.log("nav up")
+        let n = data.indexOf(sel) - 1
+        if (n < 0) n = data.length - 1
+        setSel(data[n])
+    }
+    const moveSelectionDown = () => {
+        console.log("nav down")
+        let n = data.indexOf(sel) + 1
+        if (n >= data.length) n = 0
+        setSel(data[n])
+    }
     return <ul ref={listRef} style={{
         maxHeight: '150px',
         overflow: 'scroll',
     }}>
         {data.map(d => {
             return <li key={d}
+                       tabIndex={0}
                        className={toClass({ selected: sel===d })}
                        onMouseDown={(e:MouseEvent<HTMLElement>) => setSel(d)}
                        onContextMenu={(e) => {
@@ -178,6 +191,16 @@ export function DragListDemo() {
                        onTouchStart={onTouchStart}
                        onTouchMove={onTouchMove}
                        onTouchEnd={onTouchEnd}
+                       onKeyDown={(e) => {
+                           if(e.key === 'ArrowUp') {
+                               e.preventDefault()
+                               moveSelectionUp()
+                           }
+                           if(e.key === 'ArrowDown') {
+                               e.preventDefault()
+                               moveSelectionDown()
+                           }
+                       }}
             >
                 {d}
                 {!touch && <span onMouseDown={onMouseDown}>D</span>}
