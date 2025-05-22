@@ -1,50 +1,52 @@
 import "./draglist.css"
 import {MouseEvent, TouchEvent, useRef, useState, MutableRefObject} from "react"
 import {hasTouchScreen, toClass} from "./util";
-const log = (...args:any[]) => console.log("",...args);
+
+const log = (...args: any[]) => console.log("", ...args);
 
 class DragState {
     private list: HTMLElement
     private dragTarget: HTMLElement
-    private timer:number|undefined
+    private timer: number | undefined
     private clientY: number
 
-    constructor(list:HTMLElement, dragTarget:HTMLElement) {
+    constructor(list: HTMLElement, dragTarget: HTMLElement) {
         this.list = list
         this.dragTarget = dragTarget
         this.clientY = 0
     }
 
     checkBounds() {
-        if(!this.dragTarget) return
+        if (!this.dragTarget) return
         const list_bounds = this.list.getBoundingClientRect()
         const dragtarget_bounds = this.dragTarget.getBoundingClientRect()
         const target_y = dragtarget_bounds.top - list_bounds.top
-        if(target_y < 0) {
-            this.list.scrollTop = Math.max(this.list.scrollTop - 5,0);
+        if (target_y < 0) {
+            this.list.scrollTop = Math.max(this.list.scrollTop - 5, 0);
         }
-        if(target_y + dragtarget_bounds.height > this.list.clientHeight) {
+        if (target_y + dragtarget_bounds.height > this.list.clientHeight) {
             this.list.scrollTop = Math.min(this.list.scrollTop + 5, this.list.clientHeight);
         }
         this.dragTarget.style.top = (this.clientY - list_bounds.top + this.list.scrollTop - 10) + "px";
     }
 
-    startDrag(cy:number) {
+    startDrag(cy: number) {
         log('start drag')
         this.dragTarget.classList.add('dragging')
         this.clientY = cy
         this.timer = setInterval(() => {
             this.checkBounds()
-        },10)
+        }, 10)
     }
-    moveDrag(cy:number) {
-        if(!this.dragTarget) return;
+
+    moveDrag(cy: number) {
+        if (!this.dragTarget) return;
         // log('move drag at ' + cy)
         const list_bounds = this.list.getBoundingClientRect()
         this.clientY = cy
-        for(let i = 0; i < this.list.children.length; i++) {
+        for (let i = 0; i < this.list.children.length; i++) {
             const item = this.list.children[i] as HTMLElement
-            if(item === this.dragTarget) {
+            if (item === this.dragTarget) {
                 item.style.left = '0px'
                 item.style.top = (this.clientY - list_bounds.top + this.list.scrollTop - 10) + "px";
             } else {
@@ -59,12 +61,13 @@ class DragState {
             }
         }
     }
+
     stopDrag() {
         // log('stop drag')
         if (this.dragTarget) {
             clearInterval(this.timer)
             this.dragTarget.classList.remove('dragging')
-            for(let i = 0; i < this.list.children.length; i++) {
+            for (let i = 0; i < this.list.children.length; i++) {
                 const item = this.list.children[i] as HTMLElement
                 item.style.transform = 'translateY(0)'
             }
@@ -72,11 +75,11 @@ class DragState {
         }
     }
 
-    startMouseDrag(clientY:number) {
+    startMouseDrag(clientY: number) {
         log('start mouse drag')
         this.startDrag(clientY)
         const handle_mouse_move = (e) => {
-            if(!this.dragTarget) return;
+            if (!this.dragTarget) return;
             log("mouse move")
             e.preventDefault()
             e.stopPropagation()
@@ -85,17 +88,18 @@ class DragState {
         const handle_mouse_end = (e) => {
             log("mouse end")
             this.stopDrag()
-            window.removeEventListener('mousemove',handle_mouse_move)
+            window.removeEventListener('mousemove', handle_mouse_move)
             window.removeEventListener('mouseup', handle_mouse_end)
         }
         window.addEventListener('mousemove', handle_mouse_move)
         window.addEventListener("mouseup", handle_mouse_end)
     }
+
     startTouchDrag(clientY: number) {
         log('start touch drag')
         this.startDrag(clientY)
         const handle_touch_move = (e) => {
-            if(!this.dragTarget) return;
+            if (!this.dragTarget) return;
             // log('touch move')
             e.preventDefault()
             e.stopPropagation()
@@ -104,10 +108,10 @@ class DragState {
         const handle_touch_end = (e) => {
             this.stopDrag()
             // log('touch end')
-            window.removeEventListener("touchmove", handle_touch_move, { passive: false})
+            window.removeEventListener("touchmove", handle_touch_move, {passive: false})
             window.removeEventListener("touchend", handle_touch_end)
         }
-        window.addEventListener("touchmove", handle_touch_move, {  passive: false })
+        window.addEventListener("touchmove", handle_touch_move, {passive: false})
         window.addEventListener("touchend", handle_touch_end)
     }
 }
@@ -127,38 +131,38 @@ let hold: number | undefined
 
 function useDragMaster(param: { list: MutableRefObject<HTMLUListElement | null> }) {
     const {list} = param
-    const onMouseDown = (e:MouseEvent<HTMLElement>) => {
+    const onMouseDown = (e: MouseEvent<HTMLElement>) => {
         const span = e.target as HTMLElement
         const li = span.parentElement as HTMLElement
         const clientY = e.clientY
         let ds = new DragState(list.current as HTMLElement, li)
         ds.startMouseDrag(clientY)
     }
-    const onTouchStart = (e:TouchEvent<HTMLElement>) => {
+    const onTouchStart = (e: TouchEvent<HTMLElement>) => {
         hold = setTimeout(() => {
             clearTimeout(hold)
             hold = undefined
             const li = e.target as HTMLElement
             let ds = new DragState(list.current as HTMLElement, li)
             ds.startTouchDrag(e.touches[0].clientY)
-        },1000)
+        }, 1000)
     }
-    const onTouchMove = (e:TouchEvent<HTMLElement>) => {
-        if(hold) {
+    const onTouchMove = (e: TouchEvent<HTMLElement>) => {
+        if (hold) {
             console.log("clearing hold")
             clearTimeout(hold)
             hold = undefined
         }
     }
-    const onTouchEnd = (e:TouchEvent<HTMLElement>) => {
-        if(hold) {
+    const onTouchEnd = (e: TouchEvent<HTMLElement>) => {
+        if (hold) {
             console.log("clearing hold")
             clearTimeout(hold)
             hold = undefined
             console.log("tapped")
         }
     }
-    const onContextMenu = (e:MouseEvent<HTMLElement>) => {
+    const onContextMenu = (e: MouseEvent<HTMLElement>) => {
         e.preventDefault()
         e.stopPropagation()
     }
@@ -178,11 +182,11 @@ function useDragMaster(param: { list: MutableRefObject<HTMLUListElement | null> 
 }
 
 export function DragListDemo() {
-    const listRef = useRef<HTMLUListElement|null>(null)
+    const listRef = useRef<HTMLUListElement | null>(null)
     const [selected, setSelected] = useState(data[0])
     const [editing, setEditing] = useState(false)
     const opts = useDragMaster({
-        list:listRef
+        list: listRef
     })
 
 
@@ -196,44 +200,59 @@ export function DragListDemo() {
         if (n >= data.length) n = 0
         setSelected(data[n])
     }
-    return <ul ref={listRef} style={{
-        maxHeight: '150px',
-        overflow: 'scroll',
-    }}>
-        {data.map(d => {
-            return <li key={d}
-                       tabIndex={0}
-                       className={toClass({ selected: selected===d })}
-                       onMouseDown={(e:MouseEvent<HTMLElement>) => {
-                           e.preventDefault()
-                           e.stopPropagation()
-                           if(d === selected && editing) {
-                               setEditing(false)
-                               return
-                           } else {
-                               setSelected(d)
-                               setEditing(true)
-                           }
-                       }}
-                       onKeyDown={(e) => {
-                           if(e.key === 'ArrowUp') {
+    const startDragIn = (e) => {
+        const item = document.createElement('li')
+        item.innerText = "drag me"
+        listRef.current?.appendChild(item)
+        const clientY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY
+        let ds = new DragState(listRef.current as HTMLElement, item)
+        if(e.type === 'touchstart') {
+            ds.startTouchDrag(clientY)
+        } else {
+            ds.startMouseDrag(clientY)
+        }
+    }
+    return <div className={'vbox'}>
+        <button onMouseDown={startDragIn} onTouchStart={startDragIn}>drag in</button>
+        <ul ref={listRef} style={{
+            maxHeight: '150px',
+            overflow: 'scroll',
+        }}>
+            {data.map(d => {
+                return <li key={d}
+                           tabIndex={0}
+                           className={toClass({selected: selected === d})}
+                           onMouseDown={(e: MouseEvent<HTMLElement>) => {
                                e.preventDefault()
-                               moveSelectionUp()
-                           }
-                           if(e.key === 'ArrowDown') {
-                               e.preventDefault()
-                               moveSelectionDown()
-                           }
-                       }}
-                       {... opts.touchHandlers}
-            >
-                        {d}
-                {editing && d === selected && <div style={{
-                    minHeight: '50px',
-                }}
-                >in edit mode</div>}
-                {!opts.isTouch && <span onMouseDown={opts.mouseHandlers.onMouseDown}>D</span>}
-            </li>
-        })}
-    </ul>
+                               e.stopPropagation()
+                               if (d === selected && editing) {
+                                   setEditing(false)
+                                   return
+                               } else {
+                                   setSelected(d)
+                                   setEditing(true)
+                               }
+                           }}
+                           onKeyDown={(e) => {
+                               if (e.key === 'ArrowUp') {
+                                   e.preventDefault()
+                                   moveSelectionUp()
+                               }
+                               if (e.key === 'ArrowDown') {
+                                   e.preventDefault()
+                                   moveSelectionDown()
+                               }
+                           }}
+                           {...opts.touchHandlers}
+                >
+                    {d}
+                    {editing && d === selected && <div style={{
+                        minHeight: '50px',
+                    }}
+                    >in edit mode</div>}
+                    {!opts.isTouch && <span onMouseDown={opts.mouseHandlers.onMouseDown}>D</span>}
+                </li>
+            })}
+        </ul>
+    </div>
 }

@@ -189,20 +189,20 @@ export function App() {
     return <div className="debug">
         <DialogContext.Provider value={new DialogContextImpl()}>
             <PopupContext.Provider value={new PopupContextImpl()}>
-                <TabbedPanel titles={['Inputs', 'Layout', 'Dialog', 'Drag List']}>
-                    <VBox className={'show-focus-within'}>
-                        <PopupDemo/>
-                    </VBox>
-                    <VBox>
-                        <button>tab 2</button>
-                    </VBox>
-                    <VBox>
-                        <DialogDemo/>
-                    </VBox>
-                    <VBox>
+                {/*<TabbedPanel titles={['Inputs', 'Layout', 'Dialog', 'Drag List']}>*/}
+                {/*    <VBox className={'show-focus-within'}>*/}
+                {/*        <PopupDemo/>*/}
+                {/*    </VBox>*/}
+                {/*    <VBox>*/}
+                {/*        <button>tab 2</button>*/}
+                {/*    </VBox>*/}
+                {/*    <VBox>*/}
+                {/*        <DialogDemo/>*/}
+                {/*    </VBox>*/}
+                {/*    <VBox>*/}
                         <DragListDemo/>
-                    </VBox>
-                </TabbedPanel>
+                {/*    </VBox>*/}
+                {/*</TabbedPanel>*/}
                 <DialogContainer/>
                 <PopupContainer/>
             </PopupContext.Provider>
