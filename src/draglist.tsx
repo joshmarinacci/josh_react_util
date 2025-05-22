@@ -1,5 +1,5 @@
 import "./draglist.css"
-import {MouseEvent, TouchEvent, useRef, useState} from "react"
+import {MouseEvent, TouchEvent, useRef, useState, MutableRefObject} from "react"
 import {hasTouchScreen, toClass} from "./util";
 const log = (...args:any[]) => console.log("",...args);
 
@@ -125,25 +125,21 @@ const data = [
 
 let hold: number | undefined
 
-export function DragListDemo() {
-    const listRef = useRef<HTMLUListElement|null>(null)
+function useDragMaster(param: { list: MutableRefObject<HTMLUListElement | null> }) {
+    const {list} = param
     const onMouseDown = (e:MouseEvent<HTMLElement>) => {
         const span = e.target as HTMLElement
         const li = span.parentElement as HTMLElement
         const clientY = e.clientY
-        let ds = new DragState(listRef.current as HTMLElement, li)
+        let ds = new DragState(list.current as HTMLElement, li)
         ds.startMouseDrag(clientY)
     }
-    const [sel, setSel] = useState(data[0])
-
-    const touch = hasTouchScreen()
-
     const onTouchStart = (e:TouchEvent<HTMLElement>) => {
         hold = setTimeout(() => {
             clearTimeout(hold)
             hold = undefined
             const li = e.target as HTMLElement
-            let ds = new DragState(listRef.current as HTMLElement, li)
+            let ds = new DragState(list.current as HTMLElement, li)
             ds.startTouchDrag(e.touches[0].clientY)
         },1000)
     }
@@ -162,6 +158,32 @@ export function DragListDemo() {
             console.log("tapped")
         }
     }
+    const onContextMenu = (e:MouseEvent<HTMLElement>) => {
+        e.preventDefault()
+        e.stopPropagation()
+    }
+    const isTouch = hasTouchScreen()
+    return {
+        touchHandlers: {
+            onTouchStart,
+            onTouchMove,
+            onTouchEnd,
+            onContextMenu,
+        },
+        mouseHandlers: {
+            onMouseDown,
+        },
+        isTouch,
+    }
+}
+
+export function DragListDemo() {
+    const listRef = useRef<HTMLUListElement|null>(null)
+    const [sel, setSel] = useState(data[0])
+    const opts = useDragMaster({
+        list:listRef
+    })
+
 
     const moveSelectionUp = () => {
         console.log("nav up")
@@ -184,13 +206,6 @@ export function DragListDemo() {
                        tabIndex={0}
                        className={toClass({ selected: sel===d })}
                        onMouseDown={(e:MouseEvent<HTMLElement>) => setSel(d)}
-                       onContextMenu={(e) => {
-                           e.preventDefault()
-                           e.stopPropagation()
-                         }}
-                       onTouchStart={onTouchStart}
-                       onTouchMove={onTouchMove}
-                       onTouchEnd={onTouchEnd}
                        onKeyDown={(e) => {
                            if(e.key === 'ArrowUp') {
                                e.preventDefault()
@@ -201,9 +216,10 @@ export function DragListDemo() {
                                moveSelectionDown()
                            }
                        }}
+                       {... opts.touchHandlers}
             >
                 {d}
-                {!touch && <span onMouseDown={onMouseDown}>D</span>}
+                {!opts.isTouch && <span onMouseDown={opts.mouseHandlers.onMouseDown}>D</span>}
             </li>
         })}
     </ul>
