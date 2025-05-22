@@ -106,13 +106,35 @@ function FocusManagerExample() {
     </VBox>
 }
 
+const items = [
+    "foo",
+    "bar",
+    "baz",
+]
+function PopupFilteredListExample() {
+    const [query, setQuery] = useState("")
+    const filtered = items.filter(item => item.startsWith(query.trim()))
+    return <VBox>
+        <input type={'search'} value={query} onChange={(e) => setQuery(e.target.value)}/>
+        <ul>
+            {filtered.map((item, index) => {
+                return <li key={index}>{item}</li>
+            })}
+        </ul>
+    </VBox>
+}
+
 export function PopupDemo() {
     const pm = useContext(PopupContext);
-    return <HBox>
+    return <div className={'wrapbox'}>
         <VBox>
             <h3>Custom Input</h3>
             <p>type : to pick emoji</p>
-            <CustomInput/>
+            <InputWithPopupExample/>
+        </VBox>
+        <VBox>
+            <h3>popup filtered list</h3>
+            <PopupFilteredListExample/>
         </VBox>
         <VBox>
             <h3>Popup Focus Management</h3>
@@ -123,9 +145,10 @@ export function PopupDemo() {
             </button>
         </VBox>
         <VBox>
+            <h3>FocusManager</h3>
             <FocusManagerExample/>
         </VBox>
-    </HBox>
+    </div>
 }
 
 function PopupContent() {
@@ -177,7 +200,7 @@ function TextPopup({value, selected, elements}: TextPopupProps) {
     </ul>
 }
 
-function CustomInput() {
+function InputWithPopupExample() {
     const [text, setText] = useState("");
     const [show, setShow] = useState(false);
     const [selected, setSelected] = useState("smile");
