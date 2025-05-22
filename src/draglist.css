@@ -125,6 +125,8 @@ ul {
         background-color: var(--control-background-color);
         transition: transform 0.2s;
         width: 100%;
+        user-select: none;
+        -webkit-user-select: none;
 
         &:hover {
             background-color: var(--control-background-color-hover);
