@@ -179,23 +179,22 @@ function useDragMaster(param: { list: MutableRefObject<HTMLUListElement | null> 
 
 export function DragListDemo() {
     const listRef = useRef<HTMLUListElement|null>(null)
-    const [sel, setSel] = useState(data[0])
+    const [selected, setSelected] = useState(data[0])
+    const [editing, setEditing] = useState(false)
     const opts = useDragMaster({
         list:listRef
     })
 
 
     const moveSelectionUp = () => {
-        console.log("nav up")
-        let n = data.indexOf(sel) - 1
+        let n = data.indexOf(selected) - 1
         if (n < 0) n = data.length - 1
-        setSel(data[n])
+        setSelected(data[n])
     }
     const moveSelectionDown = () => {
-        console.log("nav down")
-        let n = data.indexOf(sel) + 1
+        let n = data.indexOf(selected) + 1
         if (n >= data.length) n = 0
-        setSel(data[n])
+        setSelected(data[n])
     }
     return <ul ref={listRef} style={{
         maxHeight: '150px',
@@ -204,8 +203,18 @@ export function DragListDemo() {
         {data.map(d => {
             return <li key={d}
                        tabIndex={0}
-                       className={toClass({ selected: sel===d })}
-                       onMouseDown={(e:MouseEvent<HTMLElement>) => setSel(d)}
+                       className={toClass({ selected: selected===d })}
+                       onMouseDown={(e:MouseEvent<HTMLElement>) => {
+                           e.preventDefault()
+                           e.stopPropagation()
+                           if(d === selected && editing) {
+                               setEditing(false)
+                               return
+                           } else {
+                               setSelected(d)
+                               setEditing(true)
+                           }
+                       }}
                        onKeyDown={(e) => {
                            if(e.key === 'ArrowUp') {
                                e.preventDefault()
@@ -218,7 +227,11 @@ export function DragListDemo() {
                        }}
                        {... opts.touchHandlers}
             >
-                {d}
+                        {d}
+                {editing && d === selected && <div style={{
+                    minHeight: '50px',
+                }}
+                >in edit mode</div>}
                 {!opts.isTouch && <span onMouseDown={opts.mouseHandlers.onMouseDown}>D</span>}
             </li>
         })}
