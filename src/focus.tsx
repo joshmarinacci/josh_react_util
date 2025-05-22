@@ -1,13 +1,14 @@
-import {MutableRefObject, RefObject, useContext, useEffect, useRef, useState} from "react";
+import {RefObject, useContext, useRef, useState, KeyboardEvent} from "react";
 import {PopupContext} from "./popup";
 import {HBox, VBox} from "./comps";
 import {toClass} from "./util";
 
 
 class FocusManager {
-    private refs: React.RefObject<HTMLInputElement>[];
-    constructor(param: { refs: RefObject<HTMLInputElement>[] }) {
+    private readonly refs: React.RefObject<HTMLElement>[];
+    constructor(param: { refs: RefObject<HTMLElement>[] }) {
         this.refs = param.refs
+        this.onKeyDown = this.onKeyDown.bind(this)
     }
 
     private setFocusedIndex(number: number) {
@@ -21,16 +22,17 @@ class FocusManager {
     }
 
 
-    debugStatus() {
-        console.log("ref count ", this.refs.length)
-        for(let ref of this.refs) {
-            if(ref.current) {
-                if(ref.current === document.activeElement) {
-                    console.log("focused is", ref.current.value)
-                }
-            }
-        }
-    }
+    // debugStatus() {
+    //     console.log("ref count ", this.refs.length)
+    //     for(let ref of this.refs) {
+    //         if(ref.current) {
+    //             if(ref.current === document.activeElement) {
+    //                 // @ts-ignore
+    //                 console.log("focused is", ref.current.value)
+    //             }
+    //         }
+    //     }
+    // }
 
     private findFocused() {
         for(let i = 0; i < this.refs.length; i++) {
@@ -53,30 +55,54 @@ class FocusManager {
         const focused = this.findFocused()
         if(focused) this.setFocusedIndex(focused.index - 1)
     }
+
+    onKeyDown(e:KeyboardEvent<HTMLElement>) {
+        let target = e.target as HTMLElement
+        if(e.key === 'ArrowDown') {
+            if(target.nodeName === 'TEXTAREA') {
+                const textarea = target as HTMLTextAreaElement
+                if(textarea.selectionStart === textarea.value.length) {
+                    this.moveSelectionDown()
+                }
+            } else {
+                this.moveSelectionDown()
+            }
+        }
+        if(e.key === 'ArrowUp') {
+            if(target.nodeName === 'TEXTAREA') {
+                const textarea = target as HTMLTextAreaElement
+                if(textarea.selectionStart === 0) {
+                    this.moveSelectionUp()
+                }
+            } else {
+                this.moveSelectionUp()
+            }
+        }
+    }
 }
 
 function FocusManagerExample() {
     const input1 = useRef<HTMLInputElement>(null)
     const input2 = useRef<HTMLInputElement>(null)
     const input3 = useRef<HTMLInputElement>(null)
+    const textareaRef = useRef<HTMLTextAreaElement>(null)
+    const [text,setText ] = useState("some text")
     const [fm] = useState(() => {
         return new FocusManager({
-            refs: [input1, input2, input3]
+            refs: [input1, input2, input3, textareaRef]
         })
     })
-    const handleKey = (e) => {
-        fm.debugStatus()
-        if(e.key === 'ArrowDown') {
-            fm.moveSelectionDown()
-        }
-        if(e.key === 'ArrowUp') {
-            fm.moveSelectionUp()
-        }
-    }
     return <VBox>
-        <input type={'text'} ref={input1} onKeyDown={handleKey}/>
-        <input type={'text'} ref={input2} onKeyDown={handleKey}/>
-        <input type={'text'} ref={input3} onKeyDown={handleKey}/>
+        <input ref={input1} onKeyDown={fm.onKeyDown}/>
+        <input ref={input2} onKeyDown={fm.onKeyDown}/>
+        <input ref={input3} onKeyDown={fm.onKeyDown}/>
+        <textarea rows={5} cols={20} ref={textareaRef}
+                  onKeyDown={(e)=>{
+                      fm.onKeyDown(e)
+                      console.log("doing something special")
+                  }}
+                  value={text}
+                  onChange={(e) => setText(e.target.value)} />
     </VBox>
 }
 
@@ -125,7 +151,7 @@ const completions = [
     "happy",
     "explode",
 ]
-const emojis = {
+const emojis:Record<string, string> = {
     "smile": "😀",
     "happy": "😃",
     "explode": "💥",
