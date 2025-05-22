@@ -6,13 +6,12 @@ const log = (...args:any[]) => console.log("",...args);
 class DragState {
     private list: HTMLElement
     private dragTarget: HTMLElement
-    private timer:number|null
+    private timer:number|undefined
     private clientY: number
 
     constructor(list:HTMLElement, dragTarget:HTMLElement) {
         this.list = list
         this.dragTarget = dragTarget
-        this.timer = null
         this.clientY = 0
     }
 
@@ -38,6 +37,41 @@ class DragState {
             this.checkBounds()
         },10)
     }
+    moveDrag(cy:number) {
+        if(!this.dragTarget) return;
+        // log('move drag at ' + cy)
+        const list_bounds = this.list.getBoundingClientRect()
+        this.clientY = cy
+        for(let i = 0; i < this.list.children.length; i++) {
+            const item = this.list.children[i] as HTMLElement
+            if(item === this.dragTarget) {
+                item.style.left = '0px'
+                item.style.top = (this.clientY - list_bounds.top + this.list.scrollTop - 10) + "px";
+            } else {
+                const bounds = item.getBoundingClientRect()
+                const half = bounds.height / 2
+                if (bounds.bottom - half < this.clientY) {
+                    item.style.transform = 'translateY(0)'
+                }
+                if (bounds.top + half > this.clientY) {
+                    item.style.transform = 'translateY(100%)'
+                }
+            }
+        }
+    }
+    stopDrag() {
+        // log('stop drag')
+        if (this.dragTarget) {
+            clearInterval(this.timer)
+            this.dragTarget.classList.remove('dragging')
+            for(let i = 0; i < this.list.children.length; i++) {
+                const item = this.list.children[i] as HTMLElement
+                item.style.transform = 'translateY(0)'
+            }
+            console.log("time to rearrange the elements")
+        }
+    }
+
     startMouseDrag(clientY:number) {
         log('start mouse drag')
         this.startDrag(clientY)
@@ -57,56 +91,19 @@ class DragState {
         window.addEventListener('mousemove', handle_mouse_move)
         window.addEventListener("mouseup", handle_mouse_end)
     }
-    moveDrag(cy:number) {
-        if(!this.dragTarget) return;
-        log('move drag at ' + cy)
-        const list_bounds = this.list.getBoundingClientRect()
-        this.clientY = cy
-        for(let i = 0; i < this.list.children.length; i++) {
-            const li = this.list.children[i] as HTMLElement
-            if(li === this.dragTarget) {
-                this.dragTarget.style.left = '0px'
-                this.dragTarget.style.top = (cy - list_bounds.top + this.list.scrollTop - 10) + "px";
-            } else {
-                const bounds = li.getBoundingClientRect()
-                const half = bounds.height / 2
-                if (bounds.bottom - half < this.clientY) {
-                    li.style.transform = 'translateY(0)'
-                }
-                if (bounds.top + half > this.clientY) {
-                    li.style.transform = 'translateY(100%)'
-                }
-            }
-        }
-    }
-    stopDrag() {
-        log('stop drag')
-        if (this.dragTarget) {
-            if (this.timer) clearInterval(this.timer)
-            this.timer = null
-            this.dragTarget.classList.remove('dragging')
-            this.dragTarget = null
-            this.clientY = -1
-            for(let i = 0; i < this.list.children.length; i++) {
-                const li = this.list.children[i] as HTMLElement
-                li.style.transform = 'translateY(0)'
-            }
-        }
-    }
-
     startTouchDrag(clientY: number) {
         log('start touch drag')
         this.startDrag(clientY)
         const handle_touch_move = (e) => {
             if(!this.dragTarget) return;
-            log('touch move')
+            // log('touch move')
             e.preventDefault()
             e.stopPropagation()
             this.moveDrag(e.touches[0].clientY)
         }
         const handle_touch_end = (e) => {
             this.stopDrag()
-            log('touch end')
+            // log('touch end')
             window.removeEventListener("touchmove", handle_touch_move, { passive: false})
             window.removeEventListener("touchend", handle_touch_end)
         }
@@ -162,6 +159,7 @@ export function DragListDemo() {
             console.log("clearing hold")
             clearTimeout(hold)
             hold = undefined
+            console.log("tapped")
         }
     }
 
