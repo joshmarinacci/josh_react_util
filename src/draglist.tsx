@@ -1,18 +1,17 @@
 import "./draglist.css"
-import {MouseEvent, TouchEvent, useRef, useState, MutableRefObject} from "react"
+import {MouseEvent, TouchEvent, useRef, useState, MutableRefObject, useEffect} from "react"
 import {hasTouchScreen, toClass} from "./util";
 
 const log = (...args: any[]) => console.log("", ...args);
 
 class DragState {
     private list: HTMLElement
-    private dragTarget: HTMLElement
+    private dragTarget!: HTMLElement;
     private timer: number | undefined
     private clientY: number
 
-    constructor(list: HTMLElement, dragTarget: HTMLElement) {
+    constructor(list: HTMLElement) {
         this.list = list
-        this.dragTarget = dragTarget
         this.clientY = 0
     }
 
@@ -30,8 +29,9 @@ class DragState {
         this.dragTarget.style.top = (this.clientY - list_bounds.top + this.list.scrollTop - 10) + "px";
     }
 
-    startDrag(cy: number) {
+    startDrag(dragTarget:HTMLElement, cy: number) {
         log('start drag')
+        this.dragTarget = dragTarget
         this.dragTarget.classList.add('dragging')
         this.clientY = cy
         this.timer = setInterval(() => {
@@ -75,9 +75,9 @@ class DragState {
         }
     }
 
-    startMouseDrag(clientY: number) {
+    startMouseDrag(dragTarget:HTMLElement, clientY: number) {
         log('start mouse drag')
-        this.startDrag(clientY)
+        this.startDrag(dragTarget, clientY)
         const handle_mouse_move = (e) => {
             if (!this.dragTarget) return;
             log("mouse move")
@@ -95,9 +95,9 @@ class DragState {
         window.addEventListener("mouseup", handle_mouse_end)
     }
 
-    startTouchDrag(clientY: number) {
+    startTouchDrag(dragTarget:HTMLElement, clientY: number) {
         log('start touch drag')
-        this.startDrag(clientY)
+        this.startDrag(dragTarget,clientY)
         const handle_touch_move = (e) => {
             if (!this.dragTarget) return;
             // log('touch move')
@@ -131,20 +131,24 @@ let hold: number | undefined
 
 function useDragMaster(param: { list: MutableRefObject<HTMLUListElement | null> }) {
     const {list} = param
+    const [ds, setDs] = useState<DragState>()
+    useEffect(() => {
+        setDs(new DragState(param.list.current as HTMLElement))
+    }, [param.list.current]);
+
     const onMouseDown = (e: MouseEvent<HTMLElement>) => {
         const span = e.target as HTMLElement
         const li = span.parentElement as HTMLElement
         const clientY = e.clientY
-        let ds = new DragState(list.current as HTMLElement, li)
-        ds.startMouseDrag(clientY)
+        ds.startMouseDrag(li,clientY)
     }
     const onTouchStart = (e: TouchEvent<HTMLElement>) => {
         hold = setTimeout(() => {
             clearTimeout(hold)
             hold = undefined
             const li = e.target as HTMLElement
-            let ds = new DragState(list.current as HTMLElement, li)
-            ds.startTouchDrag(e.touches[0].clientY)
+            // let ds = new DragState(list.current as HTMLElement, li)
+            ds.startTouchDrag(li,e.touches[0].clientY)
         }, 1000)
     }
     const onTouchMove = (e: TouchEvent<HTMLElement>) => {
@@ -178,6 +182,7 @@ function useDragMaster(param: { list: MutableRefObject<HTMLUListElement | null> 
             onMouseDown,
         },
         isTouch,
+        ds,
     }
 }
 
@@ -205,11 +210,10 @@ export function DragListDemo() {
         item.innerText = "drag me"
         listRef.current?.appendChild(item)
         const clientY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY
-        let ds = new DragState(listRef.current as HTMLElement, item)
         if(e.type === 'touchstart') {
-            ds.startTouchDrag(clientY)
+            opts.ds.startTouchDrag(item,clientY)
         } else {
-            ds.startMouseDrag(clientY)
+            opts.ds.startMouseDrag(item,clientY)
         }
     }
     return <div className={'vbox'}>
