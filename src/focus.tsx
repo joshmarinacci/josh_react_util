@@ -1,7 +1,84 @@
-import {useContext, useRef, useState} from "react";
+import {MutableRefObject, RefObject, useContext, useEffect, useRef, useState} from "react";
 import {PopupContext} from "./popup";
 import {HBox, VBox} from "./comps";
 import {toClass} from "./util";
+
+
+class FocusManager {
+    private refs: React.RefObject<HTMLInputElement>[];
+    constructor(param: { refs: RefObject<HTMLInputElement>[] }) {
+        this.refs = param.refs
+    }
+
+    private setFocusedIndex(number: number) {
+        if(number < 0) {
+            number = this.refs.length - 1
+        }
+        if(number >= this.refs.length) {
+            number = 0
+        }
+        this.refs[number].current?.focus()
+    }
+
+
+    debugStatus() {
+        console.log("ref count ", this.refs.length)
+        for(let ref of this.refs) {
+            if(ref.current) {
+                if(ref.current === document.activeElement) {
+                    console.log("focused is", ref.current.value)
+                }
+            }
+        }
+    }
+
+    private findFocused() {
+        for(let i = 0; i < this.refs.length; i++) {
+            let ref = this.refs[i]
+            if(ref.current == document.activeElement) {
+                return {
+                    input:ref.current,
+                    index:i
+                }
+            }
+        }
+        return null;
+    }
+
+    moveSelectionDown() {
+        const focused = this.findFocused()
+        if(focused) this.setFocusedIndex(focused.index + 1)
+    }
+    moveSelectionUp() {
+        const focused = this.findFocused()
+        if(focused) this.setFocusedIndex(focused.index - 1)
+    }
+}
+
+function FocusManagerExample() {
+    const input1 = useRef<HTMLInputElement>(null)
+    const input2 = useRef<HTMLInputElement>(null)
+    const input3 = useRef<HTMLInputElement>(null)
+    const [fm] = useState(() => {
+        return new FocusManager({
+            refs: [input1, input2, input3]
+        })
+    })
+    const handleKey = (e) => {
+        fm.debugStatus()
+        if(e.key === 'ArrowDown') {
+            fm.moveSelectionDown()
+        }
+        if(e.key === 'ArrowUp') {
+            fm.moveSelectionUp()
+        }
+    }
+    return <VBox>
+        <input type={'text'} ref={input1} onKeyDown={handleKey}/>
+        <input type={'text'} ref={input2} onKeyDown={handleKey}/>
+        <input type={'text'} ref={input3} onKeyDown={handleKey}/>
+    </VBox>
+}
 
 export function PopupDemo() {
     const pm = useContext(PopupContext);
@@ -18,6 +95,9 @@ export function PopupDemo() {
                 onClick={(e) => pm.show_at(<PopupContent/>, e.target)}
             >show popup
             </button>
+        </VBox>
+        <VBox>
+            <FocusManagerExample/>
         </VBox>
     </HBox>
 }
