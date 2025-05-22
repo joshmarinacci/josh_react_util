@@ -1,11 +1,11 @@
 import "./draglist.css"
-import {MouseEvent, useRef, useState} from "react"
-import {toClass} from "./util";
+import {MouseEvent, TouchEvent, useRef, useState} from "react"
+import {hasTouchScreen, toClass} from "./util";
 const log = (...args:any[]) => console.log("",...args);
 
 class DragState {
     private list: HTMLElement
-    private dragTarget: HTMLElement|null = null
+    private dragTarget: HTMLElement
     private timer:number|null
     private clientY: number
 
@@ -59,7 +59,7 @@ class DragState {
     }
     moveDrag(cy:number) {
         if(!this.dragTarget) return;
-        log('move drag')
+        log('move drag at ' + cy)
         const list_bounds = this.list.getBoundingClientRect()
         this.clientY = cy
         for(let i = 0; i < this.list.children.length; i++) {
@@ -93,6 +93,26 @@ class DragState {
             }
         }
     }
+
+    startTouchDrag(clientY: number) {
+        log('start touch drag')
+        this.startDrag(clientY)
+        const handle_touch_move = (e) => {
+            if(!this.dragTarget) return;
+            log('touch move')
+            e.preventDefault()
+            e.stopPropagation()
+            this.moveDrag(e.touches[0].clientY)
+        }
+        const handle_touch_end = (e) => {
+            this.stopDrag()
+            log('touch end')
+            window.removeEventListener("touchmove", handle_touch_move, { passive: false})
+            window.removeEventListener("touchend", handle_touch_end)
+        }
+        window.addEventListener("touchmove", handle_touch_move, {  passive: false })
+        window.addEventListener("touchend", handle_touch_end)
+    }
 }
 
 const data = [
@@ -106,6 +126,8 @@ const data = [
     "h"
 ]
 
+let hold: number | undefined
+
 export function DragListDemo() {
     const listRef = useRef<HTMLUListElement|null>(null)
     const onMouseDown = (e:MouseEvent<HTMLElement>) => {
@@ -115,8 +137,33 @@ export function DragListDemo() {
         let ds = new DragState(listRef.current as HTMLElement, li)
         ds.startMouseDrag(clientY)
     }
-
     const [sel, setSel] = useState(data[0])
+
+    const touch = hasTouchScreen()
+
+    const onTouchStart = (e:TouchEvent<HTMLElement>) => {
+        hold = setTimeout(() => {
+            clearTimeout(hold)
+            hold = undefined
+            const li = e.target as HTMLElement
+            let ds = new DragState(listRef.current as HTMLElement, li)
+            ds.startTouchDrag(e.touches[0].clientY)
+        },1000)
+    }
+    const onTouchMove = (e:TouchEvent<HTMLElement>) => {
+        if(hold) {
+            console.log("clearing hold")
+            clearTimeout(hold)
+            hold = undefined
+        }
+    }
+    const onTouchEnd = (e:TouchEvent<HTMLElement>) => {
+        if(hold) {
+            console.log("clearing hold")
+            clearTimeout(hold)
+            hold = undefined
+        }
+    }
 
     return <ul ref={listRef} style={{
         maxHeight: '150px',
@@ -126,18 +173,17 @@ export function DragListDemo() {
             return <li key={d}
                        className={toClass({ selected: sel===d })}
                        onMouseDown={(e:MouseEvent<HTMLElement>) => setSel(d)}
+                       onContextMenu={(e) => {
+                           e.preventDefault()
+                           e.stopPropagation()
+                         }}
+                       onTouchStart={onTouchStart}
+                       onTouchMove={onTouchMove}
+                       onTouchEnd={onTouchEnd}
             >
                 {d}
-                <span onMouseDown={onMouseDown}>D</span>
+                {!touch && <span onMouseDown={onMouseDown}>D</span>}
             </li>
         })}
-        {/*<li>Drag Item two   <span {...props}>D</span></li>*/}
-        {/*<li>Drag Item three <span {...props}>D</span></li>*/}
-        {/*<hr/>*/}
-        {/*<li>Drag Item four  <span {...props}>D</span></li>*/}
-        {/*<li>Drag Item five  <span {...props}>D</span></li>*/}
-        {/*<li>Drag Item six   <span {...props}>D</span></li>*/}
-        {/*<li>Drag Item seven <span {...props}>D</span></li>*/}
-        {/*<li>Drag Item eight <span {...props}>D</span></li>*/}
     </ul>
 }
